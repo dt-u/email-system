@@ -1,0 +1,47 @@
+<div class="container">
+    <header>
+        <h2>
+            <%= userName %>
+        </h2>
+        <a href="/signout">Sign Out</a>
+    </header>
+    <div class="content">
+        <nav class="side-menu">
+            <ul>
+                <li><a href="/compose" class="<%= currentPage === 'compose' ? 'active' : '' %>">Compose</a></li>
+                <li><a href="/inbox" class="<%= currentPage === 'inbox' ? 'active' : '' %>">Inbox</a></li>
+                <li><a href="/outbox" class="<%= currentPage === 'outbox' ? 'active' : '' %>">Outbox</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h2>Email Details</h2>
+            <div class="email-details">
+                <p><strong>From:</strong>
+                    <%= email.sender_email %>
+                </p>
+                <p><strong>To:</strong>
+                    <%= email.recipient_email %>
+                </p>
+                <p><strong>Subject:</strong>
+                    <%= email.subject %>
+                </p>
+                <p><strong>Subject:</strong>
+                    <%= email.subject %>
+                </p>
+                <p><strong>Body:</strong>
+                    <%= email.body %>
+                </p>
+                <% if (email.attachment_path) { %>
+                    <p><strong>Attachment:</strong> <a href="/download/<%= email.attachment_path %>"
+                            class="download-link">Download (<%= email.attachment_path.split('/').pop() %>)</a></p>
+                    <% } %>
+                        <% if (currentPage==='outbox' ) { %>
+                            <a href="/outbox" class="back-link">Back to Outbox</a>
+                            <% } else { %>
+                                <a href="/inbox" class="back-link">Back to Inbox</a>
+                                <% } %>
+            </div>
+        </main>
+    </div>
+</div>
+<link rel="stylesheet" href="/styles.css">

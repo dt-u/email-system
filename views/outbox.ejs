@@ -1,0 +1,85 @@
+<div class="container">
+    <header>
+        <h2>
+            <%= userName %>
+        </h2>
+        <a href="/signout">Sign Out</a>
+    </header>
+    <div class="content">
+        <nav class="side-menu">
+            <ul>
+                <li><a href="/compose" class="<%= currentPage === 'compose' ? 'active' : '' %>">Compose</a></li>
+                <li><a href="/inbox" class="<%= currentPage === 'inbox' ? 'active' : '' %>">Inbox</a></li>
+                <li><a href="/outbox" class="<%= currentPage === 'outbox' ? 'active' : '' %>">Outbox</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h2>Outbox</h2>
+            <button onclick="deleteSelectedEmails()">Delete</button>
+            <table>
+                <tr>
+                    <th><input type="checkbox" onclick="toggleAll(this)"></th>
+                    <th>To</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                </tr>
+                <% emails.forEach(email=> { %>
+                    <tr id="email-<%= email.id %>">
+                        <td><input type="checkbox" name="emailIds" value="<%= email.id %>"></td>
+                        <td>
+                            <%= email.recipient_name %>
+                        </td>
+                        <td><a href="/email/<%= email.id %>?from=outbox">
+                                <%= email.subject %>
+                            </a></td>
+                        <td>
+                            <%= formatDate(email.timestamp) %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </table>
+            <% if (showPagination) { %>
+                <div class="pagination">
+                    <% if (pagination.currentPage> 1) { %>
+                        <a href="/outbox?page=<%= pagination.currentPage - 1 %>">Prev</a>
+                        <% } %>
+                            <% pagination.pages.forEach(page=> { %>
+                                <a href="/outbox?page=<%= page %>"
+                                    class="<%= pagination.currentPage === page ? 'active' : '' %>">
+                                    <%= page %>
+                                </a>
+                                <% }) %>
+                                    <% if (pagination.currentPage < pagination.totalPages) { %>
+                                        <a href="/outbox?page=<%= pagination.currentPage + 1 %>">Next</a>
+                                        <% } %>
+                </div>
+                <% } %>
+        </main>
+    </div>
+</div>
+<script>
+    function toggleAll(source) {
+        const checkboxes = document.getElementsByName('emailIds');
+        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+    }
+    function deleteSelectedEmails() {
+        const selectedEmails = Array.from(document.querySelectorAll('input[name="emailIds"]:checked')).map(cb => cb.value);
+        if (selectedEmails.length === 0) return;
+        fetch('/delete-emails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ emailIds: selectedEmails })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    selectedEmails.forEach(id => document.getElementById(`email-${id}`).remove());
+                } else {
+                    alert('Failed to delete emails');
+                }
+            });
+    }
+</script>
+<link rel="stylesheet" href="/styles.css">

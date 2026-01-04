@@ -1,0 +1,68 @@
+<div class="container">
+    <header>
+        <h2>
+            <%= userName %>
+        </h2>
+        <a href="/signout">Sign Out</a>
+    </header>
+    <div class="content">
+        <nav class="side-menu">
+            <ul>
+                <li><a href="/compose" class="<%= currentPage === 'compose' ? 'active' : '' %>">Compose</a></li>
+                <li><a href="/inbox" class="<%= currentPage === 'inbox' ? 'active' : '' %>">Inbox</a></li>
+                <li><a href="/outbox" class="<%= currentPage === 'outbox' ? 'active' : '' %>">Outbox</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h2>Compose Email</h2>
+            <% if (error) { %>
+                <p class="error">
+                    <%= error %>
+                </p>
+                <% } %>
+                    <% if (success) { %>
+                        <p class="success">
+                            <%= success %>
+                        </p>
+                        <div class="success-links">
+                            <a href="/compose" id="writenew">Write a New Email</a>
+                            <a href="/email/<%= emailId %>?from=outbox" id="viewsent">View Sent Email</a>
+                        </div>
+                        <% } else { %>
+                            <form action="/compose" method="post" enctype="multipart/form-data">
+                                <label for="recipient">To:</label>
+                                <select name="recipient_id" id="recipient" required>
+                                    <option value="">Select recipient</option>
+                                    <% users.forEach(user=> { %>
+                                        <option value="<%= user.id %>">
+                                            <%= user.full_name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                                <label for="subject">Subject:</label>
+                                <input type="text" name="subject" id="subject" placeholder="Email's subject (optional)">
+                                <label for="body">Body:</label>
+                                <textarea name="body" id="body" placeholder="Email's body (Optional)"></textarea>
+                                <label for="attachment">Attachment:</label>
+                                <div>
+                                    <label class="custom-file-upload">
+                                        <input type="file" name="attachment" id="attachment"
+                                            onchange="updateFileName()">
+                                        Choose File
+                                    </label>
+                                    <span class="file-name" id="file-name">No file chosen</span>
+                                </div>
+                                <button type="submit" id="sendcompose">Send</button>
+                            </form>
+                            <% } %>
+        </main>
+    </div>
+</div>
+<script>
+    function updateFileName() {
+        const input = document.getElementById('attachment');
+        const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
+    }
+</script>
+<link rel="stylesheet" href="/styles.css">

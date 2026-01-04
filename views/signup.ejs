@@ -1,0 +1,29 @@
+<div class="container sign_container">
+    <header>
+        <h2>Welcome to DTU Email System</h2>
+    </header>
+    <div class="sign <%= success ? 'success-form' : '' %>" id="signup_form">
+        <h2>Sign Up</h2>
+        <% if (error) { %>
+            <p class="error">
+                <%= error %>
+            </p>
+            <% } %>
+                <% if (success) { %>
+                    <p class="success">
+                        <%= success %>
+                    </p>
+                    <p>Welcome to our service! Please <a href="/">sign in</a> to continue.</p>
+                    <% } else { %>
+                        <form action="/signup" method="post">
+                            <input type="text" name="full_name" placeholder="Full Name" required>
+                            <input type="text" name="email" placeholder="Email" required>
+                            <input type="password" name="password" placeholder="Password" required>
+                            <input type="password" name="re_password" placeholder="Re-enter Password" required>
+                            <button type="submit">Sign Up</button>
+                        </form>
+                        <p>Already have an account? <a href="/">Sign in</a></p>
+                        <% } %>
+    </div>
+</div>
+<link rel="stylesheet" href="/styles.css">
