@@ -27,8 +27,8 @@ app.use(cookieParser());
 // Configure MySQL connection
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'wpr',
-  password: 'fit2024',
+  user: 'root',
+  password: '',
   database: 'wpr2201040185'
 });
 
